@@ -23,6 +23,7 @@ executable haskell-db-fahrplan-cli
                      , optparse-applicative    >=0.12.1
                      , text                    >=1.2
                      , time                    >=1.5
+                     , servant-client          >=0.4
   hs-source-dirs:      app
                      , src
   main-is:             Main.hs
