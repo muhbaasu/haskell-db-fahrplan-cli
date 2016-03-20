@@ -4,9 +4,10 @@ import           Control.Monad              (liftM2)
 import           Control.Monad.Trans.Either (EitherT, runEitherT)
 import           Data.Either                (either)
 import           Data.List                  (sort, zipWith)
+import           Data.Maybe                 (fromMaybe)
 import           Data.Text                  (Text, unpack, pack)
 import           Data.Time.Clock            (getCurrentTime)
-import           Data.Time.LocalTime        (LocalTime, utcToLocalTime, getTimeZone)
+import           Data.Time.LocalTime        (LocalTime (..), localDay, localTimeOfDay, utcToLocalTime, getTimeZone)
 import           Options.Applicative
 import           Servant.Client             (ServantError)
 
@@ -37,9 +38,16 @@ main :: IO ()
 main = do
   params   <- execParser (info bahncliP idm)
   now      <- localNow
-  boards   <- runEitherT $ queryBoards params now
+  boards   <- runEitherT $ queryBoards params (selectTime params now)
   putStrLn $ either show (unlines . map formatBoard) boards
   return ()
+
+-- | Select parameter time or current local time
+selectTime :: BahnCliParam -> LocalTime -> LocalTime
+selectTime params now = fromMaybe now (userFull <|> userTime <|> userDay)
+  where userFull = LocalTime <$> (day params) <*> time params
+        userTime = LocalTime (localDay now) <$> time params
+        userDay  = flip LocalTime (localTimeOfDay now) <$> day params
 
 queryBoards :: BahnCliParam -> LocalTime -> EitherT ServantError IO [StationBoard]
 queryBoards p localNow = do

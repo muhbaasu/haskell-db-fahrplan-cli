@@ -5,6 +5,7 @@ module DeutscheBahn.Schedule.Cli where
 
 import           Control.Monad            (join)
 import           Data.Monoid              ((<>))
+import           Data.Time.Calendar       (Day (..))
 import           Data.Time.LocalTime      (LocalTime (..), TimeOfDay (..))
 import           Data.Time.Format         (defaultTimeLocale, parseTimeM)
 import           Options.Applicative
@@ -38,6 +39,7 @@ data BahnCliParam = BahnCliParam
   {
     authKey      :: AuthKey
   , time         :: Maybe TimeOfDay
+  , day          :: Maybe Day
   , boardType    :: BoardType
   , lang         :: ApiLanguage
   , stopN        :: Text
@@ -47,6 +49,7 @@ bahncliP :: Parser BahnCliParam
 bahncliP = BahnCliParam
   <$> authKeyP
   <*> timeP
+  <*> dayP
   <*> ((fromMaybe BoardAll) <$> boardTypeP)
   <*> ((fromMaybe English) <$> languageP)
   <*> (pack <$> (argument str (metavar "LOCATION")))
@@ -72,10 +75,20 @@ timeP = join <$> (fmap . fmap) ptime (optional $ strOption
     ( long "time"
    <> short 't'
    <> metavar "TIME"
-   <> help "Time of day e.g. 20:22 or 05:20" ))
+   <> help "Time of day e.g. 20:22 or 05:20. Defaults to now." ))
+
+dayP :: Parser (Maybe Day)
+dayP = join <$> (fmap . fmap) pday (optional $ strOption
+    ( long "day"
+   <> short 'd'
+   <> metavar "Day"
+   <> help "Day e.g. 30.12.2016. Defaults to today." ))
 
 ptime :: String -> Maybe TimeOfDay
 ptime = parseTimeM True defaultTimeLocale "%H:%M"
+
+pday :: String -> Maybe Day
+pday = parseTimeM True defaultTimeLocale "%d.%m.%Y"
 
 boardTypeP :: Parser (Maybe BoardType)
 boardTypeP =
