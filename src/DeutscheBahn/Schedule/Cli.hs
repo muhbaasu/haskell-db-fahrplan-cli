@@ -54,6 +54,11 @@ bahncliP = BahnCliParam
   <*> ((fromMaybe English) <$> languageP)
   <*> (pack <$> (argument str (metavar "LOCATION")))
 
+programInfo :: InfoMod a
+programInfo = ( fullDesc
+                   <> progDesc "DeutscheBahn CLI v0.1"
+                   <> header "DeutscheBahn CLI - Retrieve schedules via the command line" )
+
 languageP :: Parser (Maybe ApiLanguage)
 languageP = optional $ option auto
     ( long "language"
@@ -68,7 +73,7 @@ authKeyP = AuthKey
     ( long "key"
    <> short 'k'
    <> metavar "AUTHKEY"
-   <> help "API Authentication Key provided by Deutsche Bahn" )
+   <> help "API Authentication Key provided by Deutsche Bahn." )
 
 timeP :: Parser (Maybe TimeOfDay)
 timeP = join <$> (fmap . fmap) ptime (optional $ strOption
@@ -96,5 +101,5 @@ boardTypeP =
     ( long "board"
    <> short 'b'
    <> metavar "BOARD"
-   <> help "`arrival` || `departure` || `all`" )
+   <> help "`arrival` or `departure` or `all`" )
 

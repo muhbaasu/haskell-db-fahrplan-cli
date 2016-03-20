@@ -36,7 +36,7 @@ instance Ord StationBoard where
 
 main :: IO ()
 main = do
-  params   <- execParser (info bahncliP idm)
+  params   <- execParser (info (helper <*> bahncliP) programInfo)
   now      <- localNow
   boards   <- runEitherT $ queryBoards params (selectTime params now)
   putStrLn $ either show (unlines . map formatBoard) boards
