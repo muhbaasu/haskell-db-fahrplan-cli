@@ -9,7 +9,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/muhbaasu/haskell-db-fahrplan-api.git
-    commit: 537a2dcd42e008b4ac579d798037d24e9da9286d
+    commit: 9a1b5c709b0224e99b3f41056ebd7ecc4912f334
 # Packages to be pulled from upstream that are not in the resolver (e.g., acme-missiles-0.3)
 extra-deps: []
 
