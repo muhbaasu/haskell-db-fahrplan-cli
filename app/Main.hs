@@ -44,10 +44,9 @@ main = do
 
 -- | Select parameter time or current local time
 selectTime :: BahnCliParam -> LocalTime -> LocalTime
-selectTime params now = fromMaybe now (userFull <|> userTime <|> userDay)
-  where userFull = LocalTime <$> (day params) <*> time params
-        userTime = LocalTime (localDay now) <$> time params
-        userDay  = flip LocalTime (localTimeOfDay now) <$> day params
+selectTime params now = LocalTime selectDay selectTime
+  where selectDay  = fromMaybe (localDay now) (day params)
+        selectTime = fromMaybe (localTimeOfDay now) (time params)
 
 queryBoards :: BahnCliParam -> LocalTime -> EitherT ServantError IO [StationBoard]
 queryBoards p localNow = do
