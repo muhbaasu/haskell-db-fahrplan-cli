@@ -1,4 +1,6 @@
 # haskell-db-fahrplan-cli
+[![Build Status](https://travis-ci.org/muhbaasu/haskell-db-fahrplan-cli.svg?branch=master)](https://travis-ci.org/muhbaasu/haskell-db-fahrplan-cli)
+
 Command Line Interface for the Deutsche Bahn Fahrplan API.
 
 ```bash

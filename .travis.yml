@@ -10,4 +10,4 @@ install:
   - stack setup
 
 script:
-  - stack build && stack test
+  - stack build
