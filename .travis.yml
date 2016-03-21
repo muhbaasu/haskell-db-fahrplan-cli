@@ -1,0 +1,13 @@
+before_install:
+  - travis_retry wget -q -O- https://s3.amazonaws.com/download.fpcomplete.com/ubuntu/fpco.key | sudo apt-key add -
+  - travis_retry echo 'deb http://download.fpcomplete.com/ubuntu/precise stable main'|sudo tee /etc/apt/sources.list.d/fpco.list
+  - travis_retry sudo apt-get update
+  - travis_retry sudo apt-get install stack -y
+
+install:
+  - stack --version
+  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
+  - stack setup
+
+script:
+  - stack build && stack test
