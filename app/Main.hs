@@ -51,14 +51,10 @@ selectTime params now = LocalTime selectDay selectTime
 queryBoards :: BahnCliParam -> LocalTime -> EitherT ServantError IO [StationBoard]
 queryBoards p localNow = do
   stops'     <- locationName Nothing (authKey p) (stopN p)
-  departures <- mapM queryDepartures stops'
-  arrivals   <- mapM queryArrivals stops'
-  return $ sortAndZip departures arrivals
-  where queryDepartures s = StationBoard s . map formatDeparture <$> departureBoard Nothing (authKey p) (_stopLocationId s) localNow
+  mapM query stops'
+  where query stop = (<>) <$> (queryDepartures stop) <*> (queryArrivals stop)
+        queryDepartures s = StationBoard s . map formatDeparture <$> departureBoard Nothing (authKey p) (_stopLocationId s) localNow
         queryArrivals s   = StationBoard s . map formatArrival <$> arrivalBoard Nothing (authKey p) (_stopLocationId s) localNow
-
-sortAndZip :: [StationBoard] -> [StationBoard] -> [StationBoard]
-sortAndZip a b = zipWith (<>) (sort a) (sort b)
 
 localNow :: IO LocalTime
 localNow = do
