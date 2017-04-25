@@ -63,3 +63,8 @@ departs 2016-03-23 11:25:00     "ICE 578"       track: 5        with: ICE       
 
 departs 2016-03-23 11:29:00     "IC 2312"       track: 6        with: IC        to: Hamburg-Altona
 ```
+
+# Development Setup
+- Install Haskell's stack
+- Install depenencies `stack install`
+- Build `stack build`
